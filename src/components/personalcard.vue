@@ -2,12 +2,27 @@
     <div class="extern">
         <el-card style="width: 90%; text-align: center; margin-left: 5%">
                 <div class="back">
-                    <img class="pic" v-bind:src="user.userMongo.avatar" alt="picture" v-on:click="home"/>
+                    <img class="pic" v-bind:src="user.userMongo.avatar" alt="picture"/>
                     <div class="text1">
                         {{user.name}}
                     </div>
-                    <div class="text2" >
-                        {{this.signature}}
+                    <div class="text2" v-if="this.update_flag === false">
+                        <el-upload
+                                action='string'
+                                style="width: 80%;z-index: 998"
+                                class="avatar-uploader"
+                                :on-change="getFile"
+                                :limit="1"
+                                :auto-upload="false"
+                                :show-file-list="false"
+                                accept=".jpg,.jpeg,.png">
+                            <el-button size="mini" type="plain" icon="el-icon-upload">上传头像</el-button>
+                        </el-upload>
+                    </div>
+
+                    <div v-if="this.update_flag === true" class="text3">
+                        <el-button size="mini" type="primary" icon="el-icon-check" @click="upload"></el-button>
+                        <el-button size="mini" type="danger" icon="el-icon-close" @click="cancel"></el-button>
                     </div>
                 </div>
                 <el-menu class="el-menu-demo" mode="horizontal" default-active="1">
@@ -19,12 +34,13 @@
 </template>
 
 <script>
-    // import axios from "axios";
+    import axios from "axios";
 
     export default {
         data() {
             return {
-                signature: "",
+                update_flag: false,
+                origin_avatar: '',
                 user: {
                     id: 0,
                     name: '交通大学',
@@ -44,9 +60,69 @@
         methods: {
             generator() {
                 this.user.id = sessionStorage.getItem("id");
-                this.user.name = sessionStorage.getItem("name");
-                this.user.sex = sessionStorage.getItem("sex");
-                this.user.userMongo.avatar =sessionStorage.getItem("userMongo")!=null ? JSON.parse(sessionStorage.getItem("userMongo")).avatar : null;
+                let url = 'http://localhost:8088/user/getPlainOne?id=' + this.user.id;
+
+                axios.get(url, {
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                }).then(res => {
+                    this.user = res.data;
+                    this.origin_avatar = this.user.userMongo.avatar;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            getBase64(file) {
+                return new Promise(function (resolve, reject) {
+                    let reader = new FileReader();
+                    let imgResult = '';
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        imgResult = reader.result;
+                    };
+                    reader.onerror = function (error) {
+                        reject(error);
+                    };
+                    reader.onloadend = function () {
+                        resolve(imgResult);
+                    };
+                });
+            },
+            getFile(file) {
+                if (!this.uploaded)
+                    this.uploaded = true;
+                this.getBase64(file.raw).then(res => {
+                    this.user.userMongo.avatar = res;
+                });
+
+                this.update_flag = true;
+                return true;
+            },
+            cancel() {
+                this.update_flag = false;
+                this.user.userMongo.avatar = this.origin_avatar;
+            },
+            upload() {
+                let url = 'http://localhost:8088/user/update';
+                console.log(url);
+
+                let form = this.user;
+                form.avatar = this.user.userMongo.avatar;
+
+                axios.post(url, form, {
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                }).then(res => {
+                    if(res.data === 'success')
+                        this.$message.success('更换头像成功！');
+                    console.log(res.data);
+                }).catch(err => {
+                   console.log(err);
+                });
+
+                this.update_flag = false;
             }
         }
     }
@@ -83,6 +159,15 @@
         clear: both;
         text-align: center;
         color: #c6c6c6;
+        margin-top: 20px;
+        margin-left: 130px;
+    }
+
+    .text3 {
+        clear: both;
+        text-align: center;
+        color: #c6c6c6;
+        margin-top: 20px;
     }
 
     .menu {

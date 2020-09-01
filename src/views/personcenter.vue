@@ -9,16 +9,15 @@
             </div>
             <div class="container">
                 <div class="side">
-                    <Counter class="counter"></Counter>
+                    <Counter :follower_num="follower_num" :following_num="following_num" :blog_num="blog_num"></Counter>
                     <Info class="info"></Info>
                     <Footstep class="footstep"></Footstep>
                 </div>
                 <div class="main">
-
                     <Information v-if="this.$root.my_person_center_info === true"></Information>
                     <Blogs v-if="this.$root.my_person_center_blogs === true"></Blogs>
-                    <Follow v-if="this.$root.my_person_center_follower === true"></Follow>
-                    <Follow v-if="this.$root.my_person_center_following === true"></Follow>
+                    <Follower v-if="this.$root.my_person_center_follower === true"></Follower>
+                    <Following v-if="this.$root.my_person_center_following === true"></Following>
                 </div>
             </div>
         </div>
@@ -29,6 +28,8 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     import Counter from "../components/counter";
     import Card from '../components/personalcard';
     import Footstep from "../components/footstep";
@@ -37,11 +38,34 @@
     import Foot from '../components/footer';
     import Blogs from "../components/myblogs";
     import Information from "../components/information";
-    import Follow from '../components/follow';
+    import Follower from '../components/followers';
+    import Following from '../components/followings';
 
     export default {
         components: {
-            Header, Counter, Info , Footstep, Card, Foot, Information, Blogs, Follow,
+            Header, Counter, Info , Footstep, Card, Foot, Information, Blogs, Follower, Following
+        },
+        data() {
+            return {
+                follower_num: 0,
+                following_num: 0,
+                blog_num: 0,
+            }
+        },
+        created() {
+            this.$root.my_person_center = true;
+
+            let url = 'http://localhost:8088/user/getPlainOne?id=' + sessionStorage.getItem("id");
+
+            axios.get(url).then(res => {
+                console.log(res.data);
+                let userMongo = res.data.userMongo;
+                this.follower_num = userMongo.follower_num;
+                this.following_num = userMongo.following_num;
+                this.blog_num = userMongo.blog_num;
+            }).catch(err => {
+                console.log(err);
+            });
         }
     }
 </script>
@@ -77,10 +101,6 @@
     .side {
         float: left;
         width: 20%;
-    }
-
-    .counter {
-
     }
 
     .info {

@@ -1,15 +1,16 @@
 <template>
     <el-card class="my-blog" shadow="hover">
-<!--        <Blog></Blog>-->
-<!--        <el-divider direction="horizon"></el-divider>-->
-<!--        <Blog></Blog>-->
-<!--        <el-divider direction="horizon"></el-divider>-->
-<!--        <Blog></Blog>-->
-        <ul>
-            <li v-for="blog in myblogs" :key="blog.id">
-                <Blog :blogs="blog"></Blog>
-            </li>
-        </ul>
+        <div v-if="size > 0">
+            <ul>
+                <li v-for="(blog, index) in myblogs" :key="blog.blog.id">
+                    <Blog :data="blog" style="margin-bottom: 5px" @delete="remove(index)"></Blog>
+                </li>
+            </ul>
+        </div>
+
+        <div v-else>
+            <p style="text-align: center; font-size: 40px; color: #c0c4cc;">暂无动态</p>
+        </div>
     </el-card>
 </template>
 
@@ -17,26 +18,36 @@
     import Blog from './blog';
     import axios from "axios";
     export default {
-        components: {Blog},
+        components: { Blog },
         data() {
             return{
-                myblogs: []
+                myblogs: [],
+                size: 0,
             }
         },
-        mounted(){
+        created(){
             this.getinfo();
         },
         methods: {
             getinfo() {
-                // let blogs = JSON.parse(sessionStorage.getItem("userMongo")).blogs;
-                let url = 'http://localhost:8088/blog/getBlogsLogined?uid=' + sessionStorage.getItem("id");
+                let id = sessionStorage.getItem("id");
 
-                axios.get(url).then((response) => {
-                    console.log(response.data);
+                let url = 'http://localhost:8088/blog/getBlogsById?uid=' + id + '&to_see_uid=' + id;
+
+                axios.get(url, {
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                }).then((response) => {
                     this.myblogs = response.data;
+                    this.size = this.myblogs.length;
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            remove(index) {
+                this.myblogs.splice(index, 1);
+                this.size--;
             }
         }
     }

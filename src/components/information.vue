@@ -25,7 +25,7 @@
                                 <div v-if="basic_flag === true">
                                     <el-input v-model="user.name" size="mini" style="width: 40%"
                                               @input="update"></el-input>
-                                    <span style="color: red" v-show="this.errormessage.name.flag">{{this.errormessage.name.message}}</span>
+                                    <span style="color: red" v-show="this.errMessage.name.flag">{{this.errMessage.name.message}}</span>
                                 </div>
                                 <div v-else>
                                     <span style="float: left" class="span-text">{{user.name}}</span>
@@ -33,13 +33,13 @@
                             </el-form-item>
                             <el-form-item label="性别">
                                 <div v-if="basic_flag === true">
-                                    <el-dropdown style="margin-left: 10%">
+                                    <el-dropdown style="margin-left: 10%" trigger="click">
                                         <span class="el-dropdown-link">
                                             {{sex()}}<i class="el-icon-arrow-down el-icon--right"></i>
                                         </span>
                                         <el-dropdown-menu slot="dropdown" style="width: 100px;margin-left: 100px">
-                                            <span v-on:click="()=>{this.user.sex='1'}"><el-dropdown-item>男</el-dropdown-item></span>
-                                            <span v-on:click="()=>{this.user.sex='0'}"><el-dropdown-item>女</el-dropdown-item></span>
+                                            <span v-on:click="()=>{this.user.sex='1'}"><el-dropdown-item id="nan">男</el-dropdown-item></span>
+                                            <span v-on:click="()=>{this.user.sex='0'}"><el-dropdown-item id="nv">女</el-dropdown-item></span>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
@@ -105,7 +105,9 @@
                             </el-form-item>
                             <el-form-item label="手机号码">
                                 <div v-if="contact_flag === true">
-                                    <el-input v-model="user.phone" size="mini"></el-input>
+                                    <el-input v-model="user.phone" size="mini" @input="update"></el-input>
+                                    <span style="color: red" v-show="this.errMessage.phone.flag">{{this.errMessage.phone.message}}</span>
+
                                 </div>
                                 <div v-else>
                                     <span style="float: left" class="span-text">{{user.phone}}</span>
@@ -127,31 +129,30 @@
             return {
                 basic_flag: false,
                 contact_flag: false,
-                birthright:"",
+                newName: '',
+                newPhone: '',
+                birthright: '',
                 sexStr: '未知',
-                errormessage: {
+                errMessage: {
                     name: {
                         message: "该用户重复或格式不正确",
                         flag: false
                     },
-                    date: {
-                        message: "该用户重复或格式不正确",
+                    phone: {
+                        message: "电话号码格式不正确或重复",
                         flag: false
                     },
-                    ddd: {
-                        message: "该用户重复或格式不正确",
-                        flag: false
-                    },
+
                 },
                 user: {
                     id: 0,
                     name: '交通大学',
                     birthday: '1896-04-07',
                     sex: -1,
-                    reg_time: '2020-07-09',
+                    type: 0,
+                    reg_time: '2020-07-01',
                     email: 'se128@sjtu.edu.cn',
-                    phone: '021-34200000',
-                    userMongo: {}
+                    phone: '021-34200000'
                 }
             }
         },
@@ -187,13 +188,10 @@
             },
             nonage(date) { // 判断是否满14周岁
                 let curr = new Date();
-                if((curr.getFullYear()-date.getFullYear()>14 )
+                return (curr.getFullYear() - date.getFullYear() > 14)
                     || (curr.getFullYear() - date.getFullYear() === 14)
                     && (curr.getMonth() > date.getMonth()
-                        || (curr.getMonth() === date.getMonth() && curr.getDate()>date.getDate())))
-                    return true;
-                else
-                    return false;
+                        || (curr.getMonth() === date.getMonth() && curr.getDate() > date.getDate()));
             },
             birth_format(date) {
                 let birth = date.getFullYear() + '-';
@@ -219,66 +217,91 @@
                 this.user.phone = sessionStorage.getItem("phone");
                 this.user.sex = sessionStorage.getItem("sex");
                 this.user.birthday = sessionStorage.getItem("birthday");
-                this.userMongo = JSON.parse(sessionStorage.getItem("userMongo"));
-                if (sessionStorage.getItem("birthday") == null) this.user.birthday = "2002-03-03"
                 this.sexStr = this.sex();
-
             },
             sessionUpdate() {
                 sessionStorage.setItem("name", this.user.name);
-                sessionStorage.setItem("userMongo", JSON.stringify(this.user.userMongo))
                 sessionStorage.setItem("sex", this.user.sex);
                 sessionStorage.setItem("birthday", this.user.birthday);
+                sessionStorage.setItem("phone", this.user.phone);
                 return true;
             },
             update() {
-                if (this.birthright != "") {
+                if (this.birthright !== '') {
                     let date = new Date(this.birthright);
                     if (this.nonage(date) === false) {
                         this.$message.error("生日不符合条件或未满18周岁");
                         return false;
                     }
-                    this.birthright="";
-                    this.basic_flag=false;
+                    this.birthright = '';
+                    this.basic_flag = false;
                     this.user.birthday = this.birth_format(date);
                 }
                 let url = 'http://localhost:8088/user/update';
                 let user = this.user;
-                console.log(user);
 
-                axios.post(url, user).then((response) => {
-                    if (response.data === "error") {
-                        this.errormessage.name.flag = true;
-                        // this.generator(); // 回溯
-                    } else {
-                        console.log(response.data)
-                        this.errormessage.name.flag = false;
-                        this.sessionUpdate();
+                if (user.phone.length === 0) {
+                    this.errMessage.phone.flag = true;
+                    return false;
+                } else {
+                    let format = /^(1[0-9]{10})$/;
+                    if (!format.test(user.phone)) {
+                        this.errMessage.phone.flag = true;
+                        return false;
                     }
+                }
+
+                axios.post(url, user, {
+                    headers: {
+                        token: sessionStorage.getItem("token")
+                    }
+                }).then(res => {
+                    console.log(res.data);
+                    if (res.data === "error" && user.name !== this.newName) {
+                        this.errMessage.name.flag = true;
+                        return false;
+                    }
+                    if (res.data === "errorPhone" && user.phone !== this.newPhone){
+                        this.errMessage.phone.flag = true;
+                        return false;
+                    }
+
+                    this.$message.success('修改个人信息成功！');
+                    this.newPhone=user.phone;
+                    this.newName=user.name;
+                    this.errMessage.name.flag = false;
+                    this.errMessage.phone.flag=false;
+                    this.sessionUpdate();
                 }).catch(err => {
                     console.log(err);
                 });
                 return this.axios.post(url).then(res => {
-                    if (res == "success") return true;
-                    else return false;
+                    return res === "success";
                 })
             },
             basic() {
                 if (this.basic_flag) {
-                    if(this.birthright!="") {
+                    if(this.errMessage.phone.flag || this.errMessage.name.flag)
+                        return;
+                    if(this.birthright !== '')
                         this.update();
-                    }
+
                     this.basic_flag = false;
                     this.update();
                     return false;
                 } else {
                     this.$message.success('启用编辑！');
+                    this.newName=this.user.name;
+                    this.newPhone=this.user.phone;
                     this.basic_flag = true;
                     return true;
                 }
             },
             contact() {
                 if (this.contact_flag) {
+                    if(this.errMessage.phone.flag || this.errMessage.name.flag)
+                        return;
+
                     this.contact_flag = false;
                     this.update();
                     return false;
@@ -287,12 +310,7 @@
                     this.contact_flag = true;
                     return true;
                 }
-            },
-            changename() {
-                this.update();
             }
-
-
         }
     }
 </script>

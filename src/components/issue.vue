@@ -90,7 +90,7 @@
         },
         methods: {
             getBlogs() {
-                let url = 'http://localhost:8088/blog/page/getPublicBlogs' +
+                let url = 'http://localhost:8088/blog/page/recommendNotLogin' +
                     '?index=' + this.index +
                     '&num=' + this.num;
 
@@ -119,11 +119,9 @@
                     }
 
                     blogs.splice(i, 1);
-                    // this.blogs.reverse();
+
                     for (let j = 0; j < blogs.length; ++j)
                         this.blogs.push(blogs[j]);
-                    // this.blogs.reverse();
-                    console.log(this.blogs);
                 }).catch(err => {
                     console.log(err);
                 });

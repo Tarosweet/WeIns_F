@@ -29,7 +29,8 @@
         <el-dialog
                 :visible.sync="dialogVisible"
                 width="50%" :show-close="false"
-                title="请选择 3 个您最感兴趣的话题">
+                title="请选择 3 个您最感兴趣的话题"
+                class="dialog-pane">
             <el-tag v-for="tag in tags" :key="tag.id" @click="SelectTag(tag)" style="margin-left: 5px">
                 {{ tag.content }}
             </el-tag>
@@ -245,6 +246,9 @@
         margin: 15px auto 20px auto;
         text-align: center;
         color: #505050;
+    }
+    .dialog-pane {
+        cursor: pointer;
     }
 </style>
 

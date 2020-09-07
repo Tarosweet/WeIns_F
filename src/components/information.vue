@@ -275,9 +275,7 @@
                 }).catch(err => {
                     console.log(err);
                 });
-                return this.axios.post(url).then(res => {
-                    return res === "success";
-                })
+
             },
             basic() {
                 if (this.basic_flag) {

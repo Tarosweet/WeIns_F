@@ -86,7 +86,7 @@
             }
         },
         created() {
-            this.getTopics();
+             this.getTopics();
         },
         methods: {
             getTopics() {
@@ -223,9 +223,7 @@
                 });
 
                 this.errMessage = 'bad';
-                return this.axios.post(url).then(res=>{
-                    return res === 'success';
-                });
+
             }
         }
     }

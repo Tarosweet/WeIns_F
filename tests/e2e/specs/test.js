@@ -14,10 +14,16 @@ describe('Login card', () => {
 
   it('input phone and passward to log in',()=>{
     cy.visit('/')
-    cy.get("#signinForm_input_phone").type("18796700152");
+    cy.get("#signinForm_input_phone").type("18796700150");
     cy.get("#signinForm_input_password").type("12345678");
     cy.get(".el-card__body > .extern > .login > .btn > #signinForm_button_login").should('be.visible').click();
-    cy.get(".el-card__body > .extern > .login > .btn > #signinForm_button_login").should("not.exist")
+    cy.get(".el-card__body > .extern > .login > .btn > #signinForm_button_login").should("be.exist");
+    cy.get("[style=\"border-bottom-color: transparent;\"]").click();
+    cy.get(".el-card__body > .extern > .login > .btn > #signinForm_button_login").should("be.visible").click();
+    cy.get(".el-card__body > .extern > .login > .btn > #signinForm_button_login").should("not.exist");
+
+
+
 
   })
 
@@ -26,7 +32,7 @@ describe('Login card', () => {
 
 describe("homepage",()=>{
   it("topnav",()=>{
-    cy.get("#float > [data-v-858ff1a0=\"\"] > .container").should("be.visible");
+    cy.get("[style=\"z-index: 100;\"] > .container").should("be.visible");
     cy.get(".container > .nav").should("be.visible");
     cy.get(".searchbar > .el-button").should('be.visible').click();
     cy.get(':nth-child(5) > .el-dropdown > .el-dropdown-link > .el-icon-arrow-down').should("be.visible").click();
@@ -37,28 +43,25 @@ describe("homepage",()=>{
 
   })
 
-  it("side",()=>{
-    cy.get("#\\32  > span").should('be.visible').click();
-    cy.get("#\\33  > span").should('be.visible').click();
-    cy.get("#\\34  > span").should('be.visible').click();
-    cy.get("#\\35  > span").should('be.visible').click();
-    cy.get("#\\36  > span").should('be.visible').click();
-  })
 
   it("release",()=>{
     cy.get("#dropdown_release > .el-dropdown-link").click().contains('公开');
-    cy.get("#dropdownmenu_release2").click();
+    cy.get("#dropdown_menu_release2").click();
     cy.get(".el-textarea__inner").type("my first blog");
     cy.get("#dropdown_release > .el-dropdown-link").click().contains('粉丝');
-    cy.get("#dropdownmenu_release3").click();
+    cy.get("#dropdown_menu_release3").click();
+    cy.get('.row-bg > :nth-child(4)').should('be.visible').click();
+    cy.get('.el-card__body > :nth-child(2) > .el-autocomplete > .el-input > .el-input__inner').type("动漫");
+    cy.get('.topic').should('be.visible').click();
+    cy.get('#release_button').click();
   })
 
 
   it("blog",()=>{
 
     cy.get(":nth-child(1) > .blog_div1 > .el-card > .el-card__body > .blog > .footer > .el-row > :nth-child(2) > .el-button").click();
-    cy.get("[style=\"z-index: 2009;\"] > .el-dialog > .el-dialog__body").should('be.visible');
-    cy.get("[style=\"z-index: 2009;\"]").click('topRight');
+    cy.get(".blog_dialog1").should('be.visible');
+    cy.get(".foot > .btn > .el-button").click();
 
   })
 })
@@ -75,11 +78,11 @@ describe("person page",()=>{
     cy.get('.text1').contains('poker')
     cy.get('.extern > .el-card > .el-card__body > .card > :nth-child(1)').contains("关注").click();
     cy.get(':nth-child(1) > .el-button > span').contains('0');
-    cy.get('.header').contains('我的关注');
+    cy.get('.header').contains('你的关注');
 
     cy.get('.extern > .el-card > .el-card__body > .card > :nth-child(2)').contains('粉丝').click();
     cy.get(':nth-child(2) > .el-button > span').contains('0');
-    cy.get('.header').contains('我的粉丝');
+    cy.get('.header').contains('你的粉丝');
 
 
     cy.get('[style="text-align: center;"]').contains('动态').click();
@@ -111,9 +114,9 @@ describe("person page",()=>{
 
 
     cy.get('.contact-header-btn > .el-button').contains('编辑').click().contains('保存');
-    cy.get(':nth-child(2) > .el-form-item__content > :nth-child(1) > .el-input > .el-input__inner').should('have.value','18796700152').clear().type('18796700100');
+    cy.get(':nth-child(2) > .el-form-item__content > :nth-child(1) > .el-input > .el-input__inner').should('have.value','18796700150').clear().type('18796700100');
     cy.get('.contact-header-btn > .el-button').contains('保存').click().contains('编辑').click().contains('保存');
-    cy.get(':nth-child(2) > .el-form-item__content > :nth-child(1) > .el-input > .el-input__inner').should('have.value','18796700100').clear().type('18796700152');
+    cy.get(':nth-child(2) > .el-form-item__content > :nth-child(1) > .el-input > .el-input__inner').should('have.value','18796700100').clear().type('18796700150');
     cy.get('.contact-header-btn > .el-button').contains('保存').click();
 
 
@@ -140,24 +143,25 @@ describe('manage page',()=>{
     cy.get('[style="float: left;"]').click();
     cy.get('.el-card__body > :nth-child(3)').contains('1');
     cy.get('.el-table__body-wrapper > .el-table__body > tbody > :nth-child(1) > .el-table_1_column_2 > .cell').contains('poker2');
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_1_column_9 > .cell > .el-button--danger').click();
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > :nth-child(1) > .el-table_2_column_12 > .cell').contains('被封禁');
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_2_column_18 > .cell > .el-button--success').click();
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_1_column_8 > .cell > div > .el-button').click();
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_2_column_11 > .cell').contains('被封禁');
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_2_column_16 > .cell > div > .el-button').click();
 
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > :nth-child(1) > .el-table_3_column_21 > .cell').contains('普通用户');
-    cy.get('[style="float: left; left: 0px;"]').click();
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_3_column_19 > .cell').contains('普通用户');
+    cy.get('[style="float: left;"] > .el-button--danger').click();
     cy.get('.el-card__body > :nth-child(3)').contains('3');
 
   })
 
   it('search test by phone and ban',()=>{
     cy.get(':nth-child(4) > .el-radio-button__inner').click();
-    cy.get('[style="float: left;"]').click();
+    cy.get('[style="float: none;"] > .el-input > .el-input__inner').type('0150');
+    cy.get('[style="float: left;"] > .el-button').click();
     cy.get('.el-card__body > :nth-child(3)').contains('1');
 
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_3_column_20>.cell').contains('poker');
-    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_3_column_21>.cell').contains('老板');
-    cy.get('[style="float: left; left: 0px;"]').click();
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_3_column_18 > .cell').contains('poker');
+    cy.get('.el-table__body-wrapper > .el-table__body > tbody > .el-table__row > .el-table_3_column_19 >.cell').contains('老板');
+    cy.get('.el-button--danger').click();
 
 
   })
@@ -172,7 +176,10 @@ describe('release blog test',()=>{
   it('release',()=>{
     cy.get(".el-textarea__inner").type("一条没有意义的博客");
     cy.get('.counter > span').contains('已输入9字');
+    cy.get('.row-bg > :nth-child(4)').should('be.visible').click();
+    cy.get('.el-card__body > :nth-child(2) > .el-autocomplete > .el-input > .el-input__inner').type("动漫");
+    cy.get('.topic').should('be.visible').click();
     cy.get('#release_button').click();
-    cy.get(':nth-child(1) > .blog_div1 > .el-card > .el-card__body > .blog > .container > .content > .text').contains('一条没有意义的博客')
+    // cy.get(':nth-child(1) > .blog_div1 > .el-card > .el-card__body > .blog > .container > .content > .text').contains('一条没有意义的博客')
   })
 })

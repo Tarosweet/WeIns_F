@@ -44,8 +44,11 @@ Vue.prototype.parseAuth = function (auth) {
 
 new Vue({
 
-  data:function(){
+  data: function(){
       return{
+          // localhost config
+          NET_ADDR : 'http://54.161.8.159:8088',
+
           logged: false,
 
           auth_user_manager: false,

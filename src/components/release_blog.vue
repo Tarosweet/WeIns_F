@@ -245,7 +245,7 @@
                     return false;
                 }
 
-                let url = 'http://localhost:8088/blog/setBlog';
+                let url = this.$root.NET_ADDR + '/blog/setBlog';
                 axios.post(url, {
                     uid: sessionStorage.getItem("id"),
                     content: this.text,
@@ -379,7 +379,7 @@
                 return true;
             },
             loadTags() {
-                let url = 'http://localhost:8088/blog/getLabels';
+                let url = this.$root.NET_ADDR + '/blog/getLabels';
                 axios.get(url).then(res => {
                     let tags = res.data;
                     for (let i = 0; i < tags.length; ++i) {
@@ -416,7 +416,7 @@
             },
             querySearchLabel() {
                 let items = [];
-                let url = 'http://localhost:8088/blog/findFuzzyLabels?lab=' + this.tagInput;
+                let url = this.$root.NET_ADDR + '/blog/findFuzzyLabels?lab=' + this.tagInput;
                 axios.get(url).then(res => {
                     let labels = res.data;
                     for (let i = 0; i < labels.length; ++i) {
@@ -464,7 +464,7 @@
                     return;
                 }
 
-                let url = 'http://localhost:8088/blog/setLabel?label=' + this.newTagInput.replace(/\s*/g, "");
+                let url = this.$root.NET_ADDR + '/blog/setLabel?label=' + this.newTagInput.replace(/\s*/g, "");
 
                 axios.get(url, {
                     headers: {

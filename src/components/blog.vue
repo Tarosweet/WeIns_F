@@ -147,7 +147,7 @@
         },
         data() {
             return {
-                userAvatar: 'http://bpic.588ku.com/element_pic/01/55/09/6357474dbf2409c.jpg',
+                userAvatar: this.$root.NET_ADDR + '/element_pic/01/55/09/6357474dbf2409c.jpg',
                 blog: {
                     blogMongo: null,
                     coll_number: 0,
@@ -278,7 +278,7 @@
                 return false;
             },
             _delete() {
-                let url = 'http://localhost:8088/blog/removeBlog?'
+                let url = this.$root.NET_ADDR + '/blog/removeBlog?'
                 + 'uid=' + sessionStorage.getItem("id")
                 + '&bid=' + this.blog.id
                 + '&type=' + this.blog.type;
@@ -315,7 +315,7 @@
                 this.share_flag = false;
                 this.comment_flag = false;
                 this.$message.success('hahaha');
-                axios.get('http://localhost:8088/blog/getSingleBlog?bid=' + this.blog.id, {
+                axios.get(this.$root.NET_ADDR + '/blog/getSingleBlog?bid=' + this.blog.id, {
                     headers: {
                         token: sessionStorage.getItem("token")
                     }
@@ -331,7 +331,7 @@
                     return false;
                 }
 
-                let url = 'http://localhost:8088/blog/collect' +
+                let url = this.$root.NET_ADDR + '/blog/collect' +
                     '?uid=' + sessionStorage.getItem('id') +
                     '&bid=' + this.blog.id +
                     '&flag=';
@@ -377,7 +377,7 @@
                 }
 
                 if (this.like_flag) {
-                    let url = 'http://localhost:8088/blog/removeLike?'
+                    let url = this.$root.NET_ADDR + '/blog/removeLike?'
                         + 'uid=' + sessionStorage.getItem("id")
                         + '&bid=' + this.blog.id;
 
@@ -402,7 +402,7 @@
                 }
 
                 else {
-                    let url = 'http://localhost:8088/blog/like?'
+                    let url = this.$root.NET_ADDR + '/blog/like?'
                         + 'uid=' + sessionStorage.getItem("id")
                         + '&bid=' + this.blog.id;
 

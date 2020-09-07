@@ -54,7 +54,7 @@
         },
         methods: {
             getBlogs() {
-                let url = 'http://localhost:8088/blog/page/recommend?uid=' + sessionStorage.getItem("id")
+                let url = this.$root.NET_ADDR + '/blog/page/recommend?uid=' + sessionStorage.getItem("id")
                         + '&index=' + this.index + '&num=' + this.num;
 
                 axios.get(url, {

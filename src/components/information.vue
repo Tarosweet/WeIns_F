@@ -237,7 +237,7 @@
                     this.basic_flag = false;
                     this.user.birthday = this.birth_format(date);
                 }
-                let url = 'http://localhost:8088/user/update';
+                let url = this.$root.NET_ADDR + '/user/update';
                 let user = this.user;
 
                 if (user.phone.length === 0) {

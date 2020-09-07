@@ -41,7 +41,7 @@
         methods: {
             generator() {
                 let id = this.$root.my_person_center ? sessionStorage.getItem("id") : this.$route.query.id;
-                let url = 'http://localhost:8088/user/getPlainOne?id=' + id;
+                let url = this.$root.NET_ADDR + '/user/getPlainOne?id=' + id;
 
                 axios.get(url, {
                     headers: {

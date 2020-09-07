@@ -60,7 +60,7 @@
         methods: {
             generator() {
                 this.user.id = sessionStorage.getItem("id");
-                let url = 'http://localhost:8088/user/getPlainOne?id=' + this.user.id;
+                let url = this.$root.NET_ADDR + '/user/getPlainOne?id=' + this.user.id;
 
                 axios.get(url, {
                     headers: {
@@ -104,7 +104,7 @@
                 this.user.userMongo.avatar = this.origin_avatar;
             },
             upload() {
-                let url = 'http://localhost:8088/user/update';
+                let url = this.$root.NET_ADDR + '/user/update';
                 console.log(url);
 
                 let form = this.user;

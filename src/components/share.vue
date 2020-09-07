@@ -140,11 +140,11 @@
                     console.log(err);
                 });
 
-                this.$emit('change',);
+                this.$emit('change');
                 return true;
             },
             comment() {
-                let url = 'http://localhost:8088/blog/setComment';
+                let url = this.$root.NET_ADDR + '/blog/setComment';
 
                 axios.post(url, {
                         uid: sessionStorage.getItem("id"),

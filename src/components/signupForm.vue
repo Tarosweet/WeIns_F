@@ -91,7 +91,7 @@
         },
         methods: {
             getTopics() {
-                let url = 'http://localhost:8088/blog/getLabels';
+                let url = this.$root.NET_ADDR + '/blog/getLabels';
                 axios.get(url).then(res => {
                     this.tags = [];
                     for (let i = 0; i < 10; ++i)
@@ -202,7 +202,7 @@
 
                 this.dialogVisible = false;
                 let form = this.registerForm;
-                let url = 'http://localhost:8088/user/register';
+                let url = this.$root.NET_ADDR + '/user/register';
                 axios.post(url, form).then(res => {
                     switch (res.data) {
                         case "phone error":

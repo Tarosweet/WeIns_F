@@ -76,11 +76,11 @@
         methods: {
             generator() {
                 this.activeIndex = (this.$route.query.lid === '0') ? 1 : this.$route.query.lid;
-                let url = 'http://localhost:8088/blog/page/getPublicBlogs'
+                let url = this.$root.NET_ADDR + '/blog/page/getPublicBlogs'
                         + '?index=' + this.index + '&num=' + this.num;
 
                 if (this.$root.logged === true)
-                    url = 'http://localhost:8088/blog/page/getBlogsByLabel?'
+                    url = this.$root.NET_ADDR + '/blog/page/getBlogsByLabel?'
                         + 'lid=' + this.activeIndex
                         + '&uid=' + sessionStorage.getItem("id")
                         + '&index=' + this.index

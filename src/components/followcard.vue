@@ -74,8 +74,8 @@
             }
         },
         created() {
-            this.id = this.$props.uid;
-            let url = 'http://localhost:8088/user/getPlainOne?id=' + this.id;
+            this.id = this.$props.uid;``
+            let url = this.$root.NET_ADDR + '/user/getPlainOne?id=' + this.id;
 
             axios.get(url, {
                 headers: {
@@ -108,7 +108,7 @@
                     return;
                 }
 
-                let url = 'http://localhost:8088/user/follow?'
+                let url = this.$root.NET_ADDR + '/user/follow?'
                     + 'sub=' + sessionStorage.getItem("id")
                     + '&obj=' + this.id
                     + '&flag=' + flag;

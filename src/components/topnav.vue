@@ -100,7 +100,7 @@
                 activeIndex: '1',
                 activeIndex2: '1',
                 dialogVisible: false
-            };
+            }
         },
         created() {
             // 候选项，如果未进行搜索则候选项为热搜榜，故这里拉取热搜榜
@@ -137,7 +137,7 @@
                 return true;
             },
             querySearchUser() {
-                let url = 'http://localhost:8088/user/getByFuzzyName?name=' + this.state;
+                let url = this.$root.NET_ADDR + '/user/getByFuzzyName?name=' + this.state;
 
                 axios.get(url).then(res => {
                     let users = res.data;
@@ -154,7 +154,7 @@
                 });
             },
             querySearchLabel() {
-                let url = 'http://localhost:8088/blog/findFuzzyLabels?lab=' + this.state;
+                let url = this.$root.NET_ADDR + '/blog/findFuzzyLabels?lab=' + this.state;
                 axios.get(url).then(res => {
                     let labels = res.data;
                     for (let i = 0; i < labels.length; ++i) {

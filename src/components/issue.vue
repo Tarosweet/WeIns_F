@@ -90,7 +90,7 @@
         },
         methods: {
             getBlogs() {
-                let url = 'http://localhost:8088/blog/page/recommendNotLogin' +
+                let url = this.$root.NET_ADDR + '/blog/page/recommendNotLogin' +
                     '?index=' + this.index +
                     '&num=' + this.num;
 

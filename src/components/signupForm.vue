@@ -86,7 +86,7 @@
             }
         },
         created() {
-             this.getTopics();
+            this.getTopics();
         },
         methods: {
             getTopics() {

@@ -136,11 +136,8 @@
                     return false;
                 }
 
-                let url = 'http://localhost:8088/blog/setComment';
+                let url = this.$root.NET_ADDR + '/blog/setComment';
                 let text = this.textSplit();
-
-                console.log(this.text);
-                console.log(text);
 
                 axios.post(url, {
                         uid: sessionStorage.getItem("id"),
@@ -175,7 +172,7 @@
                 this.$emit('change');
             },
             share(text) {
-                let url = 'http://localhost:8088/blog/setReblog';
+                let url = this.$root.NET_ADDR + '/blog/setReblog';
 
                 axios.post(url, {
                         uid: sessionStorage.getItem("id"),

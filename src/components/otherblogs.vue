@@ -35,7 +35,7 @@
         },
         methods: {
             getinfo() {
-                let url = 'http://localhost:8088/blog/getBlogsById?uid=' + sessionStorage.getItem("id")
+                let url = this.$root.NET_ADDR + '/blog/getBlogsById?uid=' + sessionStorage.getItem("id")
                     + '&to_see_uid=' + this.$route.query.id;
 
                 axios.get(url, {

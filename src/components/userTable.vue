@@ -131,7 +131,7 @@
         },
         methods: {
             init(){
-                let url = 'http://localhost:8088/user/getAll';
+                let url = this.$root.NET_ADDR + '/user/getAll';
                 axios.get(url, {
                     headers: {
                         token: sessionStorage.getItem("token")
@@ -202,7 +202,7 @@
                 this.radio = item;
             },
             handleClick(row, tar) {
-                let url='http://localhost:8088/user/auth?sub=' + sessionStorage.getItem('id')
+                let url = this.$root.NET_ADDR + '/user/auth?sub=' + sessionStorage.getItem('id')
                             +'&obj=' + row.id + '&tar=' + tar;
 
                 axios.post(url, {}, {

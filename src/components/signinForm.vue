@@ -100,7 +100,7 @@
 
                     this.isSubmit = true; // 防止恶意多次点击
 
-                    let url = 'http://localhost:8088/user/login' +
+                    let url = this.$root.NET_ADDR + '/user/login' +
                         '?ph=' + this.form.phone +
                         '&pwd=' + this.form.password;
 

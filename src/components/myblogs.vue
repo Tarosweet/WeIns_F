@@ -32,7 +32,7 @@
             getinfo() {
                 let id = sessionStorage.getItem("id");
 
-                let url = 'http://localhost:8088/blog/getBlogsById?uid=' + id + '&to_see_uid=' + id;
+                let url = this.$root.NET_ADDR + '/blog/getBlogsById?uid=' + id + '&to_see_uid=' + id;
 
                 axios.get(url, {
                     headers: {

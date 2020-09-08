@@ -11,7 +11,6 @@
                 <div class="side">
                     <Counter :follower_num="follower_num" :following_num="following_num" :blog_num="blog_num"></Counter>
                     <Info class="info"></Info>
-                    <Footstep class="footstep"></Footstep>
                 </div>
                 <div class="main">
                     <Information v-if="this.$root.my_person_center_info === true"></Information>
@@ -32,7 +31,6 @@
 
     import Counter from "../components/counter";
     import Card from '../components/personalcard';
-    import Footstep from "../components/footstep";
     import Info from "../components/info";
     import Header from '../components/topnav';
     import Foot from '../components/footer';
@@ -42,9 +40,7 @@
     import Following from '../components/followings';
 
     export default {
-        components: {
-            Header, Counter, Info , Footstep, Card, Foot, Information, Blogs, Follower, Following
-        },
+        components: { Header, Counter, Info , Card, Foot, Information, Blogs, Follower, Following },
         data() {
             return {
                 follower_num: 0,
@@ -55,7 +51,7 @@
         created() {
             this.$root.my_person_center = true;
 
-            let url = 'http://localhost:8088/user/getPlainOne?id=' + sessionStorage.getItem("id");
+            let url = this.$root.NET_ADDR + '/user/getPlainOne?id=' + sessionStorage.getItem("id");
 
             axios.get(url).then(res => {
                 console.log(res.data);

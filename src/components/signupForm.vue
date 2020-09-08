@@ -29,7 +29,8 @@
         <el-dialog
                 :visible.sync="dialogVisible"
                 width="50%" :show-close="false"
-                title="请选择 3 个您最感兴趣的话题">
+                title="请选择 3 个您最感兴趣的话题"
+                class="dialog-pane">
             <el-tag v-for="tag in tags" :key="tag.id" @click="SelectTag(tag)" style="margin-left: 5px">
                 {{ tag.content }}
             </el-tag>
@@ -90,7 +91,7 @@
         },
         methods: {
             getTopics() {
-                let url = 'http://localhost:8088/blog/getLabels';
+                let url = this.$root.NET_ADDR + '/blog/getLabels';
                 axios.get(url).then(res => {
                     this.tags = [];
                     for (let i = 0; i < 10; ++i)
@@ -201,7 +202,7 @@
 
                 this.dialogVisible = false;
                 let form = this.registerForm;
-                let url = 'http://localhost:8088/user/register';
+                let url = this.$root.NET_ADDR + '/user/register';
                 axios.post(url, form).then(res => {
                     switch (res.data) {
                         case "phone error":
@@ -223,9 +224,7 @@
                 });
 
                 this.errMessage = 'bad';
-                return this.axios.post(url).then(res=>{
-                    return res === 'success';
-                });
+
             }
         }
     }
@@ -245,6 +244,9 @@
         margin: 15px auto 20px auto;
         text-align: center;
         color: #505050;
+    }
+    .dialog-pane {
+        cursor: pointer;
     }
 </style>
 
